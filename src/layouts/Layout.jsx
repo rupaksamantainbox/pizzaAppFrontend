@@ -1,10 +1,50 @@
+import { useDispatch, useSelector } from "react-redux"
 import PizzaLogo from "../assets/images/pizza1.png"
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../redux/slices/AuthSlice";
+import CartIcon from "../assets/images/cart.svg"
+import { useEffect } from "react";
+import { getCartDetails } from '../redux/slices/CartSlice';
+
 function Layout({children}){
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {cartsData} = useSelector((state) => state.cart)
+  //console.log(isLoggedIn)
+
+  async function handleLogout(e) {
+    e.preventDefault()
+    //console.log(typeof isLoggedIn)
+    if(isLoggedIn){
+      dispatch(logout())
+    }
+  }
+
+  async function fetchCartDetails() {
+    const res = await dispatch(getCartDetails());
+    console.log("cart details", res)
+    if(res?.payload?.isUnauthorized) {
+        console.log("unauthorized");
+        dispatch(logout());
+    }
+  }
+
+  useEffect(() => {
+      //console.log(typeof(isLoggedIn))
+      if(isLoggedIn) {
+          fetchCartDetails();
+      }
+  }, []);
+
+
     return (
         <div>
             <nav className='flex items-center justify-around h-16 text-[#687280] font-mono border-none shadow-md'>
-                <div className='flex items-center justify-center'>
-                    <p>Pizza App</p>
+                <div className='flex items-center justify-center'
+                onClick={() => navigate('/')}>
+                    <p >Pizza App</p>
                     <img src={PizzaLogo} alt="Pizza" />
                 </div>
                 <div className="hidden md:block">
@@ -23,6 +63,29 @@ function Layout({children}){
                         </li>
                     </ul>
                 </div>
+
+                <div>
+                  <ul className="flex gap-4">
+                    <li className="hover:text-[#ff9110]">
+                      {isLoggedIn == true ? (
+                        <Link onClick={handleLogout}>Logout</Link>
+                      ):(
+                        <Link to={'/auth/login'}>Login</Link>
+                      )}
+                    </li>
+                    {isLoggedIn && (
+                            <Link to={'/cart'}>
+                                <li>
+                                    <img src={CartIcon} className='w-8 h-8 inline' />
+                                    {' '}
+                                    <p className='text-black inline'>{cartsData?.items?.length}</p>
+                                </li>
+                            </Link>
+                            
+                        )}
+                  </ul>
+                </div>
+
             </nav>
 
                 {children}
