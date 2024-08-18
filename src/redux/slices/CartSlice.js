@@ -9,6 +9,7 @@ const initialState = {
 export const addProductToCart = createAsyncThunk('/cart/addProduct', async (productId) => {
     try {
         const response = axiosInstance.post(`/carts/add/${productId}`);
+        console.log(response);
         toast.promise(response, {
             loading: 'Adding product to cart',
             error: 'Something went wrong cannot add product to cart',
@@ -40,16 +41,23 @@ export const removeProductFromCart = createAsyncThunk('/cart/removeProduct', asy
 
 export const getCartDetails = createAsyncThunk('/cart/getDetails', async () => {
     try {
-        const response = axiosInstance.get('/carts');
+        const response = axiosInstance.get(`/carts`);
         toast.promise(response, {
             loading: 'Fetching cart details',
             error: 'Something went wrong cannot fetch cart',
             success: 'Cart fetched successfully',
         });
         const apiResponse = await response;
+        
         return apiResponse;
     } catch(error) {
-        console.log(error);
+        console.log(error.response);
+        if(error?.response?.status === 401) {
+            toast.error('Please login to view cart');
+            return {
+                isUnauthorized: true
+            }
+        }
         toast.error('Something went wrong');
     }
 });

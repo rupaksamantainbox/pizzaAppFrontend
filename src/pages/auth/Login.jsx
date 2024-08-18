@@ -25,7 +25,7 @@ function Login() {
 
     async function handleFormSubmit(e){
         e.preventDefault()
-        console.log(loginData)
+        //console.log(loginData)
          // Add validations for the form input
          if(!loginData.email || !loginData.password) {
             toast.error("Missing values from the form")
@@ -40,7 +40,7 @@ function Login() {
 
         const apiReponse = await dispatch(login(loginData));
         
-        if(apiReponse.payload.data.success){
+        if(apiReponse?.payload?.data?.success){
             navigate('/');
         }
     }
