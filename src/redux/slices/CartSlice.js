@@ -42,13 +42,13 @@ export const removeProductFromCart = createAsyncThunk('/cart/removeProduct', asy
 export const getCartDetails = createAsyncThunk('/cart/getDetails', async () => {
     try {
         const response = axiosInstance.get(`/carts`);
+        console.log(response)
         toast.promise(response, {
             loading: 'Fetching cart details',
             error: 'Something went wrong cannot fetch cart',
             success: 'Cart fetched successfully',
         });
         const apiResponse = await response;
-        
         return apiResponse;
     } catch(error) {
         console.log(error.response);
@@ -69,6 +69,7 @@ const cartSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getCartDetails.fulfilled, (state, action) => {
+            console.log(action)
             state.cartsData = action?.payload?.data?.data;
         });
     }

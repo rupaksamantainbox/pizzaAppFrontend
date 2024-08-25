@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { useParams } from "react-router-dom";
 import { getProductDetails } from "../../redux/slices/ProductSlice";
 import Layout from "../../layouts/Layout";
@@ -10,7 +10,7 @@ function ProductDetails() {
     const dispatch = useDispatch();
     const [productDetails, setProductDetails] = useState({});
     const [isInCart, setIsInCart] = useState(false); // Check if product is in 
-    
+    //console.log(productId)
 
     async function fetchProductDetails() {
         const details = await dispatch(getProductDetails(productId));

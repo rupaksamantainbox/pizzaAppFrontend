@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCartDetails, removeProductFromCart } from "../../redux/slices/CartSlice";
 import Layout from "../../layouts/Layout";
+import { Link } from 'react-router-dom';
 
 function CartDetails() {
 
